@@ -1,377 +1,371 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Запросы на роботизированные системы</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Запросы на роботизированные системы · МИК</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#070b14; --bg2:#0c1322; --panel:rgba(18,26,44,.72); --panel2:rgba(13,20,36,.9);
-  --line:rgba(120,160,220,.14); --txt:#e8eefb; --muted:#8a98b8;
-  --cyan:#36e6d6; --blue:#4d8bff; --violet:#9b6bff; --pink:#ff5fae;
-  --amber:#ffb454; --green:#4be38c; --red:#ff6b6b;
+  --ease:cubic-bezier(0.22,1,0.36,1);
+  --bg:#0A0D11;--card:#0E1217;--card-2:#141A20;
+  --border:rgba(255,255,255,.16);--border-soft:rgba(255,255,255,.09);
+  --fg:#FFFFFF;--muted:#8E97A1;--faint:#5A636D;
+  --g:#22B24A;--g-bright:#2BD957;--g-soft:rgba(43,217,87,.12);
+  --font:'Onest',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --r:24px;
 }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  background:radial-gradient(1200px 700px at 50% -10%,#16213d 0%,var(--bg2) 45%,var(--bg) 100%);
-  color:var(--txt); min-height:100vh; overflow-x:hidden;
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font);color:var(--fg);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.4;background:var(--bg)}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1320px;margin:0 auto;padding:30px 28px 80px}
+
+/* header */
+.top{display:flex;align-items:center;gap:16px;margin-bottom:26px}
+.mark{height:52px;flex-shrink:0;display:flex;align-items:center}
+.mark img{height:52px;width:auto;display:block}
+.htext h1{font-weight:600;font-size:30px;letter-spacing:-.025em;line-height:1.05}
+.htext .hsub{font-size:14.5px;color:var(--muted);margin-top:6px;font-weight:400}
+.brandtag{margin-left:auto;text-align:right;font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.13em;font-weight:500;line-height:1.5}
+
+/* bento kpi */
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.tile{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px;position:relative;overflow:hidden;display:flex;flex-direction:column;
+  opacity:0;transform:translateY(14px);animation:rise .55s var(--ease) forwards;transition:border-color .3s var(--ease),box-shadow .3s var(--ease),transform .3s var(--ease)}
+@keyframes rise{to{opacity:1;transform:none}}
+.tile.hov:hover{border-color:var(--g-bright);box-shadow:0 0 0 1px var(--g-bright),0 0 40px rgba(43,217,87,.16)}
+.tile.hov:hover .big{color:var(--g-bright)}
+.kpi{grid-column:span 2;cursor:default}
+.big{font-size:42px;font-weight:600;line-height:1;letter-spacing:-.03em;color:var(--fg);transition:color .3s var(--ease)}
+.cap{font-size:13px;line-height:18px;color:var(--muted);font-weight:400;margin-top:11px}
+
+/* status bar */
+.statile{grid-column:span 12;padding:22px 24px}
+.panel-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.panel-t{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.meta{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--faint);font-weight:500}
+.sbtrack{display:flex;height:12px;border-radius:999px;overflow:hidden;border:1px solid var(--border-soft)}
+.sbtrack>div{transition:.3s}
+.sbleg{display:flex;flex-wrap:wrap;gap:9px 20px;margin-top:14px}
+.sbleg span{font-size:12.5px;color:var(--muted);display:inline-flex;align-items:center;gap:7px;font-weight:400}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
+
+/* pill nav */
+.nav{display:flex;gap:8px;margin:26px 0 18px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:9px;padding:10px 20px;border-radius:999px;border:1px solid var(--border-soft);background:var(--card);
+  color:var(--muted);cursor:pointer;font-size:14px;font-weight:500;font-family:inherit;transition:.2s var(--ease)}
+.pill:hover{color:var(--fg);border-color:var(--border)}
+.pill.active{color:#06110D;background:var(--g-bright);border-color:var(--g-bright)}
+.pill .pn{font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;background:rgba(255,255,255,.14)}
+.pill.active .pn{background:rgba(6,17,13,.18);color:#06110D}
+
+.view{display:none}.view.active{display:block}
+
+/* map */
+.maprow{display:grid;grid-template-columns:1.4fr .9fr;gap:16px;align-items:stretch}
+.graphtile{padding:22px 18px;min-height:520px}
+.crumb{display:flex;gap:7px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:4px;min-height:20px}
+.crumb b{color:var(--g-bright);cursor:pointer;font-weight:500}
+.crumb .sep{opacity:.45}
+.graph-body{flex:1;position:relative;margin-top:6px}
+#gsvg{width:100%;height:100%;display:block;position:absolute;inset:0}
+.hint{position:absolute;left:6px;bottom:4px;font-size:12px;color:var(--faint);pointer-events:none}
+.gedge{fill:none;stroke:rgba(255,255,255,.16);stroke-width:1.5;transition:opacity .3s,stroke .3s}
+.gflow{fill:none;stroke:url(#mg);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:1 9;filter:drop-shadow(0 0 5px rgba(43,217,87,.7));animation:flow 1.3s linear infinite;transition:opacity .3s}
+@keyframes flow{to{stroke-dashoffset:-30}}
+.gnode{cursor:pointer}
+.gnode .ring{fill:none;stroke:var(--g-bright);stroke-width:1.5;opacity:0;transition:opacity .3s}
+.gnode .dot{transition:r .25s var(--ease),opacity .3s,fill .3s}
+.gnode text{font-family:var(--font);font-weight:500;font-size:12px;fill:var(--fg);transition:opacity .3s}
+.gnode .role{font-weight:400;font-size:10px;fill:var(--muted)}
+.gdim{opacity:.18}
+
+/* detail panel */
+.detile{padding:22px;min-height:520px}
+.detile h3{font-size:17px;font-weight:600;letter-spacing:-.01em;margin-bottom:3px}
+.detile .sub{font-size:13px;color:var(--muted);margin-bottom:16px;font-weight:400}
+.rowlist{display:flex;flex-direction:column;gap:8px;overflow:auto;max-height:430px;padding-right:2px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 15px;border-radius:14px;background:var(--card-2);
+  border:1px solid transparent;cursor:pointer;transition:.2s var(--ease)}
+.row:hover{border-color:rgba(43,217,87,.4);background:rgba(43,217,87,.06)}
+.row .nm{font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px}
+.row .cnt{font-size:12px;color:var(--muted);background:rgba(255,255,255,.06);padding:3px 11px;border-radius:999px;white-space:nowrap;font-weight:500}
+.row:hover .cnt{color:var(--g-bright);background:var(--g-soft)}
+.backbtn{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid var(--border-soft);color:var(--muted);
+  padding:7px 14px;border-radius:999px;cursor:pointer;font-size:13px;font-family:inherit;margin-bottom:14px;transition:.2s var(--ease)}
+.backbtn:hover{color:var(--fg);border-color:var(--g-bright)}
+.reqlist{display:flex;flex-direction:column;gap:11px;overflow:auto;max-height:430px;padding-right:2px}
+.req{padding:15px 16px;border-radius:16px;background:var(--card-2);border:1px solid var(--border-soft);border-left:3px solid var(--g)}
+.req .rq{font-size:14px;line-height:1.45;margin-bottom:11px;font-weight:400}
+.req .mrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.badge{font-size:11px;padding:4px 11px;border-radius:999px;font-weight:500;white-space:nowrap}
+.badge.scen{background:rgba(255,255,255,.06);color:var(--muted)}
+.numpill{font-size:11px;color:var(--faint);margin-left:auto;font-weight:500}
+
+/* tests + contacts */
+.search{display:flex;margin-bottom:16px}
+.search input{flex:1;background:var(--card);border:1px solid var(--border-soft);color:var(--fg);padding:13px 18px;border-radius:999px;
+  font-size:14px;font-family:inherit;outline:none;transition:.2s var(--ease)}
+.search input:focus{border-color:var(--g-bright)}
+.search input::placeholder{color:var(--faint)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.tcard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px;transition:.3s var(--ease)}
+.tcard:hover{border-color:var(--g-bright);box-shadow:0 0 0 1px var(--g-bright),0 0 40px rgba(43,217,87,.14)}
+.tcard .th{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:9px}
+.tcard .cust{font-weight:600;font-size:15px;letter-spacing:-.01em}
+.tcard .rq{font-size:13.5px;color:#cdd6de;margin:4px 0 12px;line-height:1.45;font-weight:400}
+.tcard .desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:14px;font-weight:400}
+.tcard .tf{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px}
+.tcard .exec{color:var(--g-bright);font-weight:500}
+.ctable{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.ctable th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);padding:15px 18px;border-bottom:1px solid var(--border-soft);font-weight:600}
+.ctable td{padding:15px 18px;border-bottom:1px solid var(--border-soft);font-size:14px;font-weight:400}
+.ctable tr:last-child td{border-bottom:none}
+.ctable tbody tr:hover td{background:rgba(43,217,87,.05)}
+.ctable td b{font-weight:600}
+
+@media(max-width:1100px){.kpi{grid-column:span 4}.maprow{grid-template-columns:1fr}.graphtile{min-height:440px}.detile{min-height:auto}}
+@media(max-width:640px){
+  .wrap{padding:20px 14px 70px}
+  .top{gap:12px}.htext h1{font-size:22px}.brandtag{display:none}
+  .kpi{grid-column:span 6}.big{font-size:34px}
+  .cards{grid-template-columns:1fr}
 }
-.wrap{max-width:1280px;margin:0 auto;padding:22px 18px 60px}
-header.hd{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
-.logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
-  background:linear-gradient(135deg,var(--cyan),var(--blue));box-shadow:0 0 24px rgba(54,230,214,.35);font-size:22px}
-.hd h1{font-size:20px;margin:0;font-weight:700;letter-spacing:.2px}
-.hd p{margin:2px 0 0;color:var(--muted);font-size:13px}
-
-.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
-.kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 16px;
-  backdrop-filter:blur(8px);position:relative;overflow:hidden}
-.kpi::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(54,230,214,.06),transparent 60%)}
-.kpi .num{font-size:30px;font-weight:800;line-height:1;background:linear-gradient(135deg,#fff,#9fc6ff);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.kpi .lbl{color:var(--muted);font-size:12.5px;margin-top:7px;text-transform:uppercase;letter-spacing:.6px}
-
-.statusbar{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:18px}
-.statusbar .t{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
-.sbtrack{display:flex;height:14px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
-.sbtrack > div{transition:.3s}
-.sbleg{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:12px}
-.sbleg span{font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
-.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
-
-.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.tab{background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:9px 16px;border-radius:11px;
-  cursor:pointer;font-size:14px;font-weight:600;transition:.2s}
-.tab:hover{color:var(--txt);border-color:rgba(120,160,220,.35)}
-.tab.active{background:linear-gradient(135deg,rgba(54,230,214,.18),rgba(77,139,255,.18));
-  color:#fff;border-color:rgba(54,230,214,.5);box-shadow:0 0 18px rgba(54,230,214,.18)}
-
-.view{display:none} .view.active{display:block}
-
-.graph-wrap{display:grid;grid-template-columns:1.35fr .95fr;gap:18px;align-items:start}
-.canvas-card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:8px;position:relative;overflow:hidden;min-height:360px}
-.crumb{position:absolute;top:14px;left:16px;z-index:5;font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.crumb b{color:var(--cyan);cursor:pointer}
-.crumb .sep{opacity:.5}
-.hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:12px;color:var(--muted);pointer-events:none}
-svg{width:100%;height:auto;display:block;touch-action:manipulation}
-
-.node{cursor:pointer}
-.node circle{transition:.35s cubic-bezier(.4,1.3,.5,1),opacity .3s,stroke .2s}
-.node text{pointer-events:none;font-weight:600;fill:#fff}
-.link{transition:.35s,opacity .3s}
-.dim{opacity:.16}
-.pulse{animation:pulse 2.4s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
-
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;min-height:360px}
-.panel h3{margin:0 0 4px;font-size:17px}
-.panel .sub{color:var(--muted);font-size:13px;margin-bottom:14px}
-.complist{display:flex;flex-direction:column;gap:8px;max-height:560px;overflow:auto}
-.crow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 13px;border-radius:12px;
-  background:var(--panel2);border:1px solid var(--line);cursor:pointer;transition:.18s}
-.crow:hover{border-color:rgba(54,230,214,.45);transform:translateX(3px)}
-.crow .nm{font-weight:600;font-size:14px}
-.crow .cnt{font-size:12px;color:var(--muted);background:rgba(120,160,220,.12);padding:3px 9px;border-radius:20px;white-space:nowrap}
-.reqlist{display:flex;flex-direction:column;gap:10px;max-height:600px;overflow:auto;padding-right:4px}
-.req{padding:13px 14px;border-radius:13px;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--cyan)}
-.req .rq{font-size:14px;line-height:1.45;margin-bottom:9px}
-.req .meta{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
-.badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:600;white-space:nowrap}
-.badge.scen{background:rgba(120,160,220,.13);color:#bcd0f5}
-.num-pill{font-size:11px;color:var(--muted);margin-left:auto}
-.backbtn{background:transparent;border:1px solid var(--line);color:var(--muted);padding:6px 12px;border-radius:9px;
-  cursor:pointer;font-size:13px;margin-bottom:12px}
-.backbtn:hover{color:#fff;border-color:rgba(54,230,214,.4)}
-
-.searchbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-.searchbar input{flex:1;min-width:200px;background:var(--panel2);border:1px solid var(--line);color:var(--txt);
-  padding:11px 14px;border-radius:11px;font-size:14px;outline:none}
-.searchbar input:focus{border-color:rgba(54,230,214,.5)}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:13px}
-.tcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;border-top:3px solid var(--blue)}
-.tcard .h{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:8px}
-.tcard .cust{font-weight:700;font-size:15px}
-.tcard .rq{font-size:13.5px;color:#cdd9f3;margin:6px 0 10px;line-height:1.45}
-.tcard .desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:11px}
-.tcard .ft{display:flex;flex-wrap:wrap;gap:7px;align-items:center;font-size:12px}
-.tcard .exec{color:#9fc6ff}
-.contacts-table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:16px;overflow:hidden}
-.contacts-table th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);
-  padding:13px 16px;border-bottom:1px solid var(--line);font-weight:600}
-.contacts-table td{padding:13px 16px;border-bottom:1px solid var(--line);font-size:14px}
-.contacts-table tr:last-child td{border-bottom:none}
-.contacts-table tr:hover td{background:rgba(120,160,220,.05)}
-
-@media(max-width:880px){
-  .graph-wrap{grid-template-columns:1fr}
-  .panel{min-height:auto}
-  .kpi .num{font-size:25px}
-}
+@media(prefers-reduced-motion:reduce){.tile{opacity:1;transform:none;animation:none}.gflow{animation:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="hd">
-    <div class="logo">&#9881;&#65039;</div>
-    <div>
-      <h1>&#1047;&#1072;&#1087;&#1088;&#1086;&#1089;&#1099; &#1085;&#1072; &#1088;&#1086;&#1073;&#1086;&#1090;&#1080;&#1079;&#1080;&#1088;&#1086;&#1074;&#1072;&#1085;&#1085;&#1099;&#1077; &#1089;&#1080;&#1089;&#1090;&#1077;&#1084;&#1099;</h1>
-      <p>&#1048;&#1085;&#1090;&#1077;&#1088;&#1072;&#1082;&#1090;&#1080;&#1074;&#1085;&#1072;&#1103; &#1082;&#1072;&#1088;&#1090;&#1072;: &#1090;&#1080;&#1087; &#1088;&#1086;&#1073;&#1086;&#1090;&#1072; &#8594; &#1079;&#1072;&#1082;&#1072;&#1079;&#1095;&#1080;&#1082; &#8594; &#1079;&#1072;&#1087;&#1088;&#1086;&#1089;</p>
+  <header class="top">
+    <div class="mark"><img src="data:image/png;base64,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" alt="МИК"></div>
+    <div class="htext">
+      <h1>Запросы на роботизированные системы</h1>
+      <div class="hsub">Тип робота → заказчик → запрос. Интерактивная карта спроса.</div>
     </div>
+    <div class="brandtag">Московский<br>инновационный<br>кластер</div>
   </header>
 
-  <div class="dash" id="dash"></div>
-  <div class="statusbar" id="statusbar"></div>
+  <div class="bento" id="dash"></div>
 
-  <div class="tabs">
-    <div class="tab active" data-v="map">&#128506; &#1050;&#1072;&#1088;&#1090;&#1072; &#1079;&#1072;&#1087;&#1088;&#1086;&#1089;&#1086;&#1074;</div>
-    <div class="tab" data-v="tests">&#129514; &#1058;&#1077;&#1089;&#1090;&#1080;&#1088;&#1086;&#1074;&#1072;&#1085;&#1080;&#1103;</div>
-    <div class="tab" data-v="contacts">&#128195; &#1040;&#1085;&#1072;&#1083;&#1080;&#1090;&#1080;&#1082;&#1072; (&#1082;&#1086;&#1085;&#1090;&#1072;&#1082;&#1090;&#1099;)</div>
+  <div class="bento" style="margin-top:16px">
+    <div class="tile statile" id="statile"></div>
+  </div>
+
+  <div class="nav" id="nav">
+    <div class="pill active" data-v="map">Карта запросов</div>
+    <div class="pill" data-v="tests">Тестирования <span class="pn" id="ntests"></span></div>
+    <div class="pill" data-v="contacts">Аналитика · контакты <span class="pn" id="ncont"></span></div>
   </div>
 
   <div class="view active" id="v-map">
-    <div class="graph-wrap">
-      <div class="canvas-card">
+    <div class="maprow">
+      <div class="tile graphtile">
         <div class="crumb" id="crumb"></div>
-        <svg id="svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet"></svg>
-        <div class="hint" id="hint"></div>
+        <div class="graph-body">
+          <svg id="gsvg"></svg>
+          <div class="hint" id="hint"></div>
+        </div>
       </div>
-      <div class="panel" id="panel"></div>
+      <div class="tile detile" id="panel"></div>
     </div>
   </div>
 
   <div class="view" id="v-tests">
-    <div class="searchbar"><input id="tsearch" placeholder="&#1055;&#1086;&#1080;&#1089;&#1082; &#1087;&#1086; &#1090;&#1077;&#1089;&#1090;&#1080;&#1088;&#1086;&#1074;&#1072;&#1085;&#1080;&#1103;&#1084;&#8230;"></div>
+    <div class="search"><input id="tsearch" placeholder="Поиск по тестированиям…"></div>
     <div class="cards" id="testcards"></div>
   </div>
 
   <div class="view" id="v-contacts">
-    <div class="searchbar"><input id="csearch" placeholder="&#1055;&#1086;&#1080;&#1089;&#1082; &#1087;&#1086; &#1082;&#1086;&#1084;&#1087;&#1072;&#1085;&#1080;&#1103;&#1084; &#1080; &#1082;&#1086;&#1085;&#1090;&#1072;&#1082;&#1090;&#1072;&#1084;&#8230;"></div>
-    <div style="overflow:auto"><table class="contacts-table" id="ctable"></table></div>
+    <div class="search"><input id="csearch" placeholder="Поиск по компаниям и контактам…"></div>
+    <div style="overflow:auto"><table class="ctable" id="ctable"></table></div>
   </div>
 </div>
 
 <script>
 const DATA = {"requests": [{"customer": "Х5", "request": "Робот для выкладки товаров на полки магазина", "num": "1.0", "type": "Автономные сервисные платформы", "scenario": "Перемещение разнотипных товаров", "status": "Отправлена подборка"}, {"customer": "Х5", "request": "Мобильный робот-вендинг для доставки товаров магазина на территории аэропорта", "num": "2", "type": "Автономные сервисные платформы", "scenario": "Доставка внутри помещений", "status": "Отправлена подборка"}, {"customer": "Х5", "request": "Робот для инвентаризации складских запасов", "num": "3", "type": "Роботы телеинспекции", "scenario": "Инвентаризация", "status": "Отправлена подборка"}, {"customer": "ТНТК Бериева (ОАК)", "request": "Роботизированная система дробеструйного упрочнения деталей", "num": "4", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Разработка ТЗ к решению"}, {"customer": "ТНТК Бериева (ОАК)", "request": "Роботизированная система покраски фюзеляжа самолета", "num": "5", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Разработка ТЗ к решению"}, {"customer": "ТНТК Бериева (ОАК)", "request": "Роботизированная система покраски отдельных деталей самолета", "num": "6", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Разработка ТЗ к решению"}, {"customer": "ТНТК Бериева (ОАК)", "request": "Роботизированная система погрузки деталей в ванну химического травления", "num": "7", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Разработка ТЗ к решению"}, {"customer": "ТНТК Бериева (ОАК)", "request": "Роботизированная клепка деталей", "num": "8", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Разработка ТЗ к решению"}, {"customer": "ТНТК Бериева (ОАК)", "request": "Обрезка композитных деталей роботизированным манипулятором", "num": "9", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Разработка ТЗ к решению"}, {"customer": "Школа 1306", "request": "Запрос на тестирование роботов-уборщиков на территории школы", "num": "10", "type": "Автономные сервисные платформы", "scenario": "Обслуживание инфраструктуры", "status": "Отправлена подборка"}, {"customer": "Технопарк «Мосгормаш»", "request": "Запрос на роботизированную уборку уличной территории Технопарка", "num": "11", "type": "Автономные сервисные платформы", "scenario": "Обслуживание инфраструктуры", "status": "Отправлена подборка"}, {"customer": "Север групп", "request": "Система автоматического управления кранами", "num": "12", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Север групп", "request": "Роботизированная платформа для перемещения грузов на производстве", "num": "13", "type": "Автономные сервисные платформы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Север групп", "request": "Дельта-роботы разных конфигураций", "num": "14", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Север групп", "request": "Роботы для инспекции объектов инфраструктуры", "num": "15", "type": "БАС для мониторинга и инфраструктуры", "scenario": "Мониторинг и инспекция", "status": "Осуществлена закупка"}, {"customer": "Север групп", "request": "Роботизированная станция для автоматической скоростной заправки крупногабаритной спецтехники", "num": "16", "type": "Манипуляционные системы", "scenario": "Автоматизация заправочной инфраструктуры", "status": "Поиск решений"}, {"customer": "Север групп", "request": "Комплексная роботизация маневровых работ и управления подвижным составом на железнодорожных путях", "num": "17", "type": "Автономные сервисные платформы", "scenario": "Автоматизация ж/д техники", "status": "Согласование требований к продукту"}, {"customer": "Камаз Диджитал", "request": "Автономная мобильная платформа для перемещения манипулятора массой до 200 кг", "num": "18", "type": "Автономные сервисные платформы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Самолет", "request": "Робот-штукатур", "num": "19", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Самолет", "request": "Робот-маляр", "num": "20", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Поиск решений"}, {"customer": "Самолет", "request": "Робот-блокоукладчик", "num": "21", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Поиск решений"}, {"customer": "Самолет", "request": "Робот-плиткоукладчик", "num": "22", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Поиск решений"}, {"customer": "Самолет", "request": "Автоматизированные решения для заливки стяжки", "num": "23", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Поиск решений"}, {"customer": "Самолет", "request": "Робот для нанесения разметки", "num": "24", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Поиск решений"}, {"customer": "Самолет", "request": "Робот для сцепки арматуры", "num": "25", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Готовится пилот"}, {"customer": "Россети", "request": "Роботы для автоматизации обслуживания ЛЭП", "num": "26", "type": "Линейные инспекционные роботы", "scenario": "Обслуживание инфраструктуры", "status": "Отправлена подборка"}, {"customer": "Россети", "request": "Автоматизированное решение для покоса травы", "num": "27", "type": "Автономные сервисные платформы", "scenario": "Обслуживание инфраструктуры", "status": "Отправлена подборка"}, {"customer": "Россети", "request": "БПЛА для инспекции объектов энергетической инфрастуктуры", "num": "28", "type": "БАС для мониторинга и инфраструктуры", "scenario": "Обслуживание инфраструктуры", "status": "Отправлена подборка"}, {"customer": "ГАЛС", "request": "Роботизированная доставка внутри ЖК", "num": "29", "type": "Автономные сервисные платформы", "scenario": "Доставка внутри помещения", "status": "Отправлена подборка"}, {"customer": "ГАЛС", "request": "Робот для мойки окон", "num": "30", "type": "Автономные сервисные платформы", "scenario": "Обслуживание инфраструктуры", "status": "Отправлена подборка"}, {"customer": "ГАЛС", "request": "Роботизированное решения для контроля доступа и безопасности", "num": "31", "type": "Сенсорные платформы мониторинга", "scenario": "Мониторинг и инспекция", "status": "Отправлена подборка"}, {"customer": "ГАЛС", "request": "Роботизированная уборка внутренней и внешней территории", "num": "32", "type": "Автономные сервисные платформы", "scenario": "Обслуживание инфраструктуры", "status": "Отправлена подборка"}, {"customer": "Газпромнефть", "request": "Роботизированная доставка проб внутри лаборатории (Омская площадка)", "num": "33", "type": "Автономные сервисные платформы", "scenario": "Доставка внутри помещения", "status": "Готовится пилот"}, {"customer": "Газпромнефть", "request": "Роботизация внутритрубной инспекции", "num": "34", "type": "Гидродинамические роботы", "scenario": "Мониторинг и инспекция", "status": "Отправлена подборка"}, {"customer": "Газпромнефть", "request": "Очистка резервуалов от нефтяных загрязнений", "num": "35", "type": "Автономные сервисные платформы", "scenario": "Обслуживание инфраструктуры", "status": "Отправлена подборка"}, {"customer": "Лента", "request": "Автоматизированное решение на мобильной платформе для контроля ценников в магазине", "num": "36", "type": "Автономные сервисные платформы", "scenario": "Мониторинг и инспекция", "status": "Отправлена подборка"}, {"customer": "Лента", "request": "Роботизированная уборка снега на парковке гипермаркетов", "num": "37", "type": "Автономные сервисные платформы", "scenario": "Обслуживание инфраструктуры", "status": "Отправлена подборка"}, {"customer": "Лента", "request": "Роботизированное перемещение паллет", "num": "38", "type": "Автономные сервисные платформы", "scenario": "Роботизация логистических операций", "status": "Отправлена подборка"}, {"customer": "Росатом Недра", "request": "Автоматизированная линия розлива магния", "num": "39", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Согласование требований к продукту"}, {"customer": "Росатом Недра", "request": "Робот для дробеструйной обработки", "num": "40", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Согласование требований к продукту"}, {"customer": "Росатом Недра", "request": "Роботизированное решение для выполнения буровых работ в опасных зонах", "num": "41", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Заключен договор"}, {"customer": "Росатом Недра", "request": "Мобильная платформа для перемещения емкостей с магнием (до 5 т)", "num": "42", "type": "Автономные сервисные платформы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Росатом Недра", "request": "Роботизированная ячейка для сварки труб", "num": "43", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Согласование требований к продукту"}, {"customer": "Росатом Недра", "request": "Роботизированная уборка снега на объектах инфраструктуры", "num": "44", "type": "Автономные сервисные платформы", "scenario": "Обслуживание инфраструктуры", "status": "Отправлена подборка"}, {"customer": "Росатом Недра", "request": "БПЛА для маркшейдерских работ", "num": "45", "type": "БАС для мониторинга и инфраструктуры", "scenario": "Мониторинг и инспекция", "status": "Отправлена подборка"}, {"customer": "Русал", "request": "Автономный катер для контроля объема шламовых полей", "num": "46", "type": "Надводные и подводные роботы", "scenario": "Мониторинг и инспекция", "status": "Поиск решений"}, {"customer": "Русал", "request": "Система автономной инспекции электролизеров (БПЛА или мобильная платформа)", "num": "47", "type": "БАС для мониторинга и инфраструктуры", "scenario": "Мониторинг и инспекция", "status": "Разработка методологии тестирования"}, {"customer": "Русал", "request": "Роботизированная система лазерной очистки ниппельных соединений", "num": "48", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Русал", "request": "Автоматизированная система покрытий анодов", "num": "49", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Русал", "request": "Автономный бульдозер для выполнения робот на территории предприятия", "num": "50", "type": "Автономные сервисные платформы", "scenario": "Обслуживание инфраструктуры", "status": "Поиск решений"}, {"customer": "Русал", "request": "Автоматизированная система правки ниппелей", "num": "51", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Русал", "request": "Мобильная платформа для перемещения грузов массой 5 т по территории предприятия", "num": "52", "type": "Автономные сервисные платформы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Русал", "request": "Автоматизиваронная система удаления заусенцев на литых дисках", "num": "53", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Русал", "request": "Роботизированный забор проб из расплава", "num": "54", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Русал", "request": "Роботизированная система удаления оксидной пленки", "num": "55", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Русал", "request": "Роботизированный штабеллер для работы с алюминиевыми слитками", "num": "56", "type": "Автономные сервисные платформы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Русал", "request": "Роботизированное перемещение проб в лабораторию", "num": "57", "type": "Автономные сервисные платформы", "scenario": "Доставка внутри помещения", "status": "Отправлена подборка"}, {"customer": "Русал", "request": "Роботизированная система маркировки изделий", "num": "58", "type": "Манипуляционные системы", "scenario": "Маркираторы", "status": "Отправлена подборка"}, {"customer": "Холдинг Ареал", "request": "Стенд, моделирующий роботизированный отбор проб из расплавленного свинца", "num": "59", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Разработка ТЗ к решению"}, {"customer": "Холдинг Ареал", "request": "Роботизированная сварка", "num": "60", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Разработка ТЗ к решению"}, {"customer": "Холдинг Ареал", "request": "Роботизированная покраска", "num": "61", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Разработка ТЗ к решению"}, {"customer": "Холдинг Ареал", "request": "Роботизированная сборка", "num": "62", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Разработка ТЗ к решению"}, {"customer": "Сплат", "request": "Роботизированная система комплектации заказов", "num": "63", "type": "Автономные сервисные платформы", "scenario": "Автоматизация комплектации", "status": "Отправлена подборка"}, {"customer": "Ашан", "request": "Роботизированная технология кросс-докинга в зоне перераспределения товаров", "num": "64", "type": "Автономные сервисные платформы", "scenario": "Автоматизация комплектации", "status": "Отправлена подборка"}, {"customer": "РЖД", "request": "Автономная инспекция объектов подводной инфраструктуры", "num": "65", "type": "Надводные и подводные роботы", "scenario": "Мониторинг и инспекция", "status": "Согласование требований к продукту"}, {"customer": "РЖД", "request": "Автономные электротягачи для работы в депо", "num": "66", "type": "Автономные сервисные платформы", "scenario": "Автоматизация ж/д техники", "status": "Разработка методологии тестирования"}, {"customer": "РЖД", "request": "Роботизированное решения для расцепки вагонов", "num": "67", "type": "Манипуляционные системы", "scenario": "Автоматизация ж/д техники", "status": "Согласование требований к продукту"}, {"customer": "ЭФКО", "request": "Роботизированное решение по разгрузки паллет с конвейерной ленты", "num": "68", "type": "Автономные сервисные платформы", "scenario": "Производственная логистика", "status": "Согласование требований к продукту"}, {"customer": "ЭФКО", "request": "Антропоморфные роботехнические решения", "num": "69", "type": "Манипуляционные системы", "scenario": "Перемещение разнотипных товаров", "status": "Отправлена подборка"}, {"customer": "Магнит", "request": "Роботизированный контроль состояний растений в теплицах", "num": "70", "type": "БАС для мониторинга и инфраструктуры", "scenario": "Мониторинг и инспекция", "status": "Отправлена подборка"}, {"customer": "Кордиант", "request": "Автоматическая система удаления дефектов корда", "num": "71", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Кордиант", "request": "Роботизированное перемещение сырья на конвейерную линию", "num": "72", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Кордиант", "request": "Автоматизированная выкладка заготовок шин на книжки-тележки", "num": "73", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Кордиант", "request": "Роботизированный конвейер для сортировки шин", "num": "74", "type": "Автономные сервисные платформы", "scenario": "Производственная логистика", "status": "Отправлена подборка"}, {"customer": "ЭкоКультура", "request": "Роботизированные системы сбора и контроля урожая", "num": "75", "type": "Автономные сервисные платформы", "scenario": "Мониторинг и инспекция", "status": "Отправлена подборка"}, {"customer": "Норд голд", "request": "Системы автономного управления карьерной техникой", "num": "76", "type": "Автономные сервисные платформы", "scenario": "Автоматизация карьерной техники", "status": "Отправлена подборка"}, {"customer": "Норд голд", "request": "Роботизированный комплекс по восстановлению кузовов самосвалов", "num": "77", "type": "Манипуляционные системы", "scenario": "Портальные роботизированные ремонтные системы", "status": "Отправлена подборка"}, {"customer": "Норд голд", "request": "БПЛА для инспекции объектов инфраструктуры на рудниках в Якутии", "num": "78", "type": "БАС для мониторинга и инфраструктуры", "scenario": "Мониторинг и инспекция", "status": "Отправлена подборка"}, {"customer": "Норд голд", "request": "Роботизированная система загрузки проб в анализатор (лаборатория ГСМ)", "num": "79", "type": "Манипуляционные системы", "scenario": "Перемещение разнотипных товаров", "status": "Отправлена подборка"}, {"customer": "Норд голд", "request": "Роботизированная система хранения ТМЦ", "num": "80", "type": "Манипуляционные системы", "scenario": "Автоматизация комплектации", "status": "Отправлена подборка"}, {"customer": "Норд голд", "request": "Роботизированная буровая техника", "num": "81", "type": "Манипуляционные системы", "scenario": "Оборудование для горных работ", "status": "Отправлена подборка"}, {"customer": "НЛМК", "request": "Роботизированная сврочная ячейка", "num": "82", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Роснефть", "request": "Доставка проб между корпусами", "num": "83", "type": "Автономные сервисные платформы", "scenario": "Уличная логистика", "status": "Отправлена подборка"}, {"customer": "Роснефть", "request": "Мониторинг протяженных объектов с помощью БПЛА", "num": "84", "type": "БАС для мониторинга и инфраструктуры", "scenario": "Мониторинг и инспекция", "status": "Отправлена подборка"}, {"customer": "Роснефть", "request": "Автономная инспекция объектов инфраструктуры", "num": "85", "type": "Сенсорные платформы мониторинга", "scenario": "Мониторинг и инспекция", "status": "Отправлена подборка"}, {"customer": "Роснефть", "request": "Роботизированная внутритрубная инспекция", "num": "86", "type": "Гидродинамические роботы", "scenario": "Мониторинг и инспекция", "status": "Отправлена подборка"}, {"customer": "Роснефть", "request": "Автономные системы пожаротушения", "num": "87", "type": "Автономные сервисные платформы", "scenario": "Системы пожаротушения", "status": "Отправлена подборка"}, {"customer": "Роснефть", "request": "Роботизированная уборки снега", "num": "88", "type": "Автономные сервисные платформы", "scenario": "Обслуживание инфраструктуры", "status": "Отправлена подборка"}, {"customer": "Роснефть", "request": "БПЛА для маркшейдерских работ", "num": "89", "type": "БАС для мониторинга и инфраструктуры", "scenario": "Мониторинг и инспекция", "status": "Отправлена подборка"}, {"customer": "Балтика", "request": "Роботизированная система разгрузки конвейерной линии", "num": "90", "type": "Автономные сервисные платформы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "ОЭК", "request": "Автономные системы пожаротушения", "num": "91", "type": "Автономные сервисные платформы", "scenario": "Системы пожаротушения", "status": "Отправлена подборка"}, {"customer": "Москвич", "request": "Система автономной навигации роботов на производсве", "num": "92", "type": "Автономные сервисные платформы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Русагро", "request": "Автономная система маркировки", "num": "93", "type": "Манипуляционные системы", "scenario": "Маркираторы", "status": "Отправлена подборка"}, {"customer": "Русагро", "request": "Роботизированная система производственной логистики", "num": "94", "type": "Автономные сервисные платформы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Русагро", "request": "Роботизация производственных операции на мясоперерабатывающем производстве", "num": "95", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}, {"customer": "Вкусно - и точка", "request": "Роботизированные решения для приготовления напитков на кухне", "num": "96", "type": "Манипуляционные системы", "scenario": "Роботизация технологического процесса", "status": "Поиск решений"}, {"customer": "Норникель", "request": "Роботизированное решение для проведения буровых работ", "num": "97", "type": "Автономные сервисные платформы", "scenario": "Роботизация технологического процесса", "status": "Согласование требований к продукту"}, {"customer": "Бристоль", "request": "БПЛА для инвентаризации ТМЦ", "num": "98", "type": "БАС для мониторинга и инфраструктуры", "scenario": "Инвентаризация", "status": "Разработка методологии тестирования"}, {"customer": "Бристоль", "request": "Роботизированное решение для перемещения паллет", "num": "99", "type": "Автономные сервисные платформы", "scenario": "Автоматизация комплектации", "status": "Разработка методологии тестирования"}, {"customer": "Монделис Русь", "request": "Роботизированная система разгрузки конвейерной линии", "num": "100", "type": "Автономные сервисные платформы", "scenario": "Роботизация технологического процесса", "status": "Отправлена подборка"}], "tests": [{"customer": "Северсталь", "request": "Решение для инвентаризации слябов", "executor": "ООО \"ЮВЛ Роботикс\"", "testing": "Тестиреутся автономный полет на складе, распознавание номеров слябов, связь с системой учета", "status": "Реализуется", "manager": "Савицкий"}, {"customer": "Лента", "request": "Доставка посылок с помощью БПЛА", "executor": "ООО \"ЮВЛ Роботикс\"", "testing": "Пилотное тестирование проводится для определение фактической стоимости доставки грузов с помощью БПЛА", "status": "Реализуется", "manager": "Савицкий"}, {"customer": "Свеза", "request": "Решение для контроля вырубки лесов", "executor": "ООО \"ЮВЛ Роботикс\"", "testing": "Тестируется контроль несанкционированной вырубки лесов с помощью БПЛА", "status": "Реализуется", "manager": "Савицкий"}, {"customer": "Роснефть", "request": "Автономная уборка снега", "executor": "ООО \"ВИАФОР\"", "testing": "Уборка снега на заданной территории вокруг БЦ без привзяки к сигналу GPS", "status": "Реализовано", "manager": "Савицкий"}, {"customer": "Дом Детей", "request": "Роботизированная мойка полов", "executor": "ООО \"РОБО\"", "testing": "Прошла демонстрация решения у заказчика, готовится методология пилота на 3 месяца", "status": "Реализовано", "manager": "Савицкий"}, {"customer": "ГКБ 67", "request": "Роботизированная доставка медикаментов внутри больницы", "executor": "ООО \"Дронлайн Столица\"", "testing": "Рассматривается 3 маршрута, все с задействованием лифтов: 1) перемещение лекарств от аптеки в отделение, 2) белье из прачечной в отделение, 3) инстумент в отделение", "status": "Разработка методологии", "manager": "Савицкий"}, {"customer": "Мосводоканал", "request": "Инспекция труб на наличие коррозии", "executor": "ООО Тьюбот\"", "testing": "Идет подготовка робота к испытаниям", "status": "В проработке", "manager": "Савицкий"}, {"customer": "Мосводоканал", "request": "Робот для очистки канализационных стоков", "executor": "ООО \"Роботехникс\"", "testing": "Идет доработка робот робота под задачу", "status": "В проработке", "manager": "Савицкий"}, {"customer": "Мосинжпроект", "request": "Робот для 3D-печати бетоном", "executor": "ООО \"Русэнергопроект\"", "testing": "Робот Cemant в условиях ограниченного пространства возвел фрагмент межкомнатной стены подземного вестибюля строящейся станции метро \"Рублево-Архангельское\"", "status": "Завершен, доработка робота к внедрению", "manager": "Чулков"}, {"customer": "Росатом Недра", "request": "Робот-бетонолом", "executor": "ООО \"Роботехникс\"", "testing": "Подписан контракт на поставку 2-х единиц техники, суммарно на 34 млн руб.", "status": "Реализуется", "manager": "Савицкий"}, {"customer": "ГАУК г. Москвы «ПКиО «Ходынское поле»", "request": "Робот для коммуникации  с посетителями", "executor": "ООО \"Айдол\"", "testing": "В июле будет установлен на ресепшене общественного пространства «Ходынское поле» для навигации посетителей, а также осуществления валидации билетов через сканирование QR-кодов,", "status": "Реализуется", "manager": "Виктор Денисов"}, {"customer": "МГОМЗ (Коломенский парк)", "request": "Роботы для работы в парковых территориях", "executor": "ООО \"Электромотив\"", "testing": "Роботизированная автономная платформа с возможностью применения различного навесного оборудования (агрегат для кошения травы), с использованием ИИ, машинного зрения, и автономных систем", "status": "В проработке", "manager": "Виктор Денисов"}, {"customer": "Фонд \"МИК\"", "request": "Доставка заказов в офисном здании", "executor": "ООО \"Дронлайн-Столица\"", "testing": "Роботизированная доставка внутри Кластера", "status": "В проработке", "manager": "Неустроев"}, {"customer": "Фонд \"МИК\"", "request": "Роботизированная мойка полов", "executor": "ООО \"РоБо\"", "testing": "Интегрированное решение для автоматизированной уборки напольных поверхностей", "status": "В проработке", "manager": "Неустроев"}, {"customer": "Норд голд", "request": "Роботизированная участок в лаборатории измерения состава ГСМ", "executor": "ООО \"Промэнерго Автоматика", "testing": "Требуется повысить производительность раборатории за счет автономной работы в ночную смену, будет протестирована возможность автономной работы с заранее подготовленными пробами", "status": "В проработке", "manager": "Савицкий"}, {"customer": "Газпромнефть", "request": "Роботизированный развоз проб по лабораториям на территории ОНПЗ", "executor": "ООО \"Дронс Хаб\"", "testing": "Будет протестировано регулярное перемещение проб между лабораториями одного этажа", "status": "В проработке", "manager": "Савицкий"}, {"customer": "Фонд \"МИК\"", "request": "Автономная уборка", "executor": "ООО \"ИНТЕГРАНТ\"", "testing": "Сервис уборки автономными многоцелевыми роботами", "status": "Завершен, успешно", "manager": "Неустроев"}, {"customer": "Фонд \"МИК\"", "request": "Автономная уборка", "executor": "ООО \"ЯКУ РОБОТИКС\"", "testing": "Тестирование беспилотной поломоечной машины на территории Кластера Ломоносов", "status": "Завершен, успешно", "manager": "Неустроев"}, {"customer": "ООО \"Технопарк \"Сколково\"", "request": "Роботизация мойки фасадов", "executor": "АО «Астрамис»", "testing": "Роботизированная система для автоматизированной мойки окон и фасадов зданий", "status": "Реализуется", "manager": "Денис Пусовский"}, {"customer": "Северный речной вокзал Москва", "request": "Безопасная подводная инспекция конструкций Северного речного вокзала", "executor": "ООО \"Прометей\"", "testing": "Подводный робот «Прометей» проводил визуально-инструментальный осмотр подводной части объекта с видеофиксацией, построением 3D-карты объекта и подготовкой материалов для технической оценки", "status": "Завершен, успешно, выставлено КП", "manager": "Денис Пусовский"}], "contacts": [{"company": "ООО \"Русэнергопроект\"", "person": "Максим Канищев", "contact": "+7 916 447 2049", "note": ""}, {"company": "ООО \"Тьюбот\"", "person": "Тимофей", "contact": "79645910677", "note": "согл"}, {"company": "ООО \"СМП РОБОТИКС\"", "person": "Алексей Полубояринов", "contact": "7 926 272 10 00", "note": "Согл"}, {"company": "ООО \"РОБКОМ\"", "person": "Виктор Бедняков", "contact": "7 910 978 44 68", "note": "согл"}, {"company": "ООО \"Кримсон роботикс\"", "person": "Коморовский Витольд", "contact": "7 900 654 25 55", "note": "согл"}, {"company": "ООО “КТБ”", "person": "Овсюк Игорь", "contact": "7 977 143 87 38", "note": "согл"}, {"company": "ООО \"Роботехникс\"", "person": "Хомутовский Дмитрий", "contact": "7 977 508 19 55", "note": ""}, {"company": "ООО \"Айдол\"", "person": "Ольга Щукина", "contact": "79194905080", "note": "согл"}, {"company": "ООО \"РОБО\"", "person": "Андрей Ткачев", "contact": "7 916 931 13 96", "note": "Согл"}, {"company": "ООО \"Дронлайн-Столица\"", "person": "Ременяко Владислав", "contact": "7 925 826 96 69", "note": "Согл"}]};
 const R = DATA.requests, TESTS = DATA.tests, CONTACTS = DATA.contacts;
-
-const TYPE_COLORS = ['#36e6d6','#4d8bff','#9b6bff','#ff5fae','#ffb454','#4be38c','#ff6b6b','#5ad1ff'];
-const STATUS_COLORS = {
- 'Отправлена подборка':'#4d8bff',
- 'Разработка ТЗ к решению':'#9b6bff',
- 'Поиск решений':'#ffb454',
- 'Согласование требований к продукту':'#36e6d6',
- 'Разработка методологии тестирования':'#5ad1ff',
- 'Готовится пилот':'#4be38c',
- 'Осуществлена закупка':'#2fd07a',
- 'Заключен договор':'#2fd07a'};
-function statusColor(s){return STATUS_COLORS[s]||'#8a98b8';}
-
 const norm = s => (s||'').replace(/\s+/g,' ').trim();
-const types = {};
-R.forEach(r=>{
-  const t = r.type||'—';
-  if(!types[t]) types[t]={count:0,companies:{}};
-  types[t].count++;
-  const c=r.customer||'—';
-  (types[t].companies[c]=types[t].companies[c]||[]).push(r);
-});
-const typeNames = Object.keys(types).sort((a,b)=>types[b].count-types[a].count);
-const typeColorMap={}; typeNames.forEach((t,i)=>typeColorMap[t]=TYPE_COLORS[i%TYPE_COLORS.length]);
-
-const totalCompanies = new Set(R.map(r=>r.customer)).size;
-const totalScenarios = new Set(R.map(r=>norm(r.scenario))).size;
-
-const kpis=[
- [R.length,'Запросов'],[totalCompanies,'Заказчиков'],
- [typeNames.length,'Типов роботов'],
- [totalScenarios,'Сценариев'],[TESTS.length,'Тестирований'],
- [CONTACTS.length,'Контактов в базе']
-];
-document.getElementById('dash').innerHTML = kpis.map(k=>
- '<div class="kpi"><div class="num">'+k[0]+'</div><div class="lbl">'+k[1]+'</div></div>').join('');
-
-const stCount={}; R.forEach(r=>{const s=norm(r.status)||'—'; stCount[s]=(stCount[s]||0)+1;});
-const stArr=Object.entries(stCount).sort((a,b)=>b[1]-a[1]);
-const track = stArr.map(([s,n])=>'<div style="width:'+(n/R.length*100)+'%;background:'+statusColor(s)+'" title="'+s+': '+n+'"></div>').join('');
-const leg = stArr.map(([s,n])=>'<span><i class="dot" style="background:'+statusColor(s)+'"></i>'+s+' — '+n+'</span>').join('');
-document.getElementById('statusbar').innerHTML =
- '<div class="t">Статусы запросов</div><div class="sbtrack">'+track+'</div><div class="sbleg">'+leg+'</div>';
-
-const SVGNS='http://www.w3.org/2000/svg';
-const svg=document.getElementById('svg');
-const CX=500, CY=500, R1=250, R2=425;
-let selType=null, selCompany=null;
-
-function el(tag,attrs,parent){const e=document.createElementNS(SVGNS,tag);
- for(const k in attrs)e.setAttribute(k,attrs[k]); if(parent)parent.appendChild(e); return e;}
-function pos(angle,rad){return [CX+rad*Math.cos(angle), CY+rad*Math.sin(angle)];}
-function typeR(t){const mx=Math.max(...typeNames.map(n=>types[n].count));
- return 30+34*Math.sqrt(types[t].count/mx);}
-
-function render(){
-  svg.innerHTML='';
-  const defs=el('defs',{},svg);
-  const g=el('radialGradient',{id:'hubg'},defs);
-  el('stop',{offset:'0%','stop-color':'#1b3a5c'},g);
-  el('stop',{offset:'100%','stop-color':'#0c1322'},g);
-
-  const n=typeNames.length;
-  const typePts={};
-  typeNames.forEach((t,i)=>{
-    const ang=(-Math.PI/2)+(i*2*Math.PI/n);
-    const [x,y]=pos(ang,R1); typePts[t]={x,y,ang};
-  });
-
-  typeNames.forEach(t=>{
-    const p=typePts[t];
-    el('line',{class:'link'+(selType&&selType!==t?' dim':''),x1:CX,y1:CY,x2:p.x,y2:p.y,
-      stroke:typeColorMap[t],'stroke-width':selType===t?3:1.6,opacity:selType===t?.9:.4},svg);
-  });
-
-  if(selType){
-    const comps=Object.keys(types[selType].companies)
-      .sort((a,b)=>types[selType].companies[b].length-types[selType].companies[a].length);
-    const tp=typePts[selType];
-    const m=comps.length;
-    comps.forEach((c,i)=>{
-      const ang=(-Math.PI/2)+(i*2*Math.PI/m);
-      const [x,y]=pos(ang, R2);
-      el('line',{class:'link',x1:tp.x,y1:tp.y,x2:x,y2:y,stroke:typeColorMap[selType],
-        'stroke-width':selCompany===c?2.6:1.3,opacity:selCompany&&selCompany!==c?.18:.5},svg);
-      const node=el('g',{class:'node'+(selCompany&&selCompany!==c?' dim':'')},svg);
-      const cnt=types[selType].companies[c].length;
-      const cr=15+Math.min(13,cnt*2.2);
-      el('circle',{cx:x,cy:y,r:cr,fill:'#0c1322',stroke:typeColorMap[selType],
-        'stroke-width':selCompany===c?3:1.8},node);
-      el('text',{x,y:y+4,'text-anchor':'middle','font-size':13,'font-weight':700},node).textContent=cnt;
-      const lx = x + (Math.cos(ang)>=0?cr+6:-(cr+6));
-      const anchor = Math.cos(ang)>=0?'start':'end';
-      const lbl=el('text',{x:lx,y:y+4,'text-anchor':anchor,'font-size':12.5,fill:'#cdd9f3'},svg);
-      lbl.textContent = c.length>20?c.slice(0,19)+'…':c;
-      node.onclick=()=>{selCompany=c;render();updatePanel();};
-      lbl.style.cursor='pointer';
-      lbl.onclick=()=>{selCompany=c;render();updatePanel();};
-    });
-  }
-
-  typeNames.forEach(t=>{
-    const p=typePts[t], col=typeColorMap[t];
-    const dim = selType && selType!==t;
-    const node=el('g',{class:'node'+(dim?' dim':'')},svg);
-    el('circle',{cx:p.x,cy:p.y,r:typeR(t),fill:col+'22',stroke:col,
-      'stroke-width':selType===t?3.5:2, class:(!selType?'pulse':'')},node);
-    el('circle',{cx:p.x,cy:p.y,r:6,fill:col},node);
-    const words=t.split(' '); let lines=[],cur='';
-    words.forEach(w=>{ if((cur+' '+w).trim().length>16){lines.push(cur.trim());cur=w;} else cur+=' '+w; });
-    if(cur.trim())lines.push(cur.trim());
-    const ty=p.y - (lines.length-1)*7 + 2;
-    lines.forEach((ln,k)=>{
-      el('text',{x:p.x,y:ty+k*13,'text-anchor':'middle','font-size':11.5,'font-weight':600},node).textContent=ln;
-    });
-    el('text',{x:p.x,y:p.y+typeR(t)+16,'text-anchor':'middle','font-size':14,'font-weight':800,fill:col},node).textContent=types[t].count;
-    node.onclick=()=>{selType=(selType===t?null:t);selCompany=null;render();updatePanel();};
-  });
-
-  const hub=el('g',{class:'node'},svg);
-  el('circle',{cx:CX,cy:CY,r:58,fill:'url(#hubg)',stroke:'rgba(54,230,214,.6)','stroke-width':2},hub);
-  el('text',{x:CX,y:CY-6,'text-anchor':'middle','font-size':30,'font-weight':800},hub).textContent=R.length;
-  el('text',{x:CX,y:CY+16,'text-anchor':'middle','font-size':13,fill:'#8a98b8'},hub).textContent='запросов';
-  hub.onclick=()=>{selType=null;selCompany=null;render();updatePanel();};
-
-  let cb='<b onclick="resetMap()">Все типы</b>';
-  if(selType)cb+='<span class="sep">›</span><b onclick="pickType(\''+js(selType)+'\')">'+esc(selType)+'</b>';
-  if(selCompany)cb+='<span class="sep">›</span><span style="color:#fff">'+esc(selCompany)+'</span>';
-  document.getElementById('crumb').innerHTML=cb;
-  document.getElementById('hint').textContent =
-    !selType ? 'Нажмите на тип робота, чтобы раскрыть заказчиков'
-    : !selCompany ? 'Нажмите на заказчика, чтобы увидеть запросы'
-    : '';
-}
-function resetMap(){selType=null;selCompany=null;render();updatePanel();}
-window.resetMap=resetMap;
 function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function js(s){return (s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
+
+/* status -> progress color (gray -> green) */
+const STATUS_ORDER=['Поиск решений','Разработка ТЗ к решению','Отправлена подборка','Согласование требований к продукту','Разработка методологии тестирования','Готовится пилот','Осуществлена закупка','Заключен договор'];
+const STATUS_COLORS={
+ 'Поиск решений':'#545C66','Разработка ТЗ к решению':'#6B7480','Отправлена подборка':'#8893A0',
+ 'Согласование требований к продукту':'#5DA985','Разработка методологии тестирования':'#46B86E',
+ 'Готовится пилот':'#2BD957','Осуществлена закупка':'#23A847','Заключен договор':'#1C8F3C'};
+function statusColor(s){return STATUS_COLORS[s]||'#8E97A1';}
+
+/* aggregate */
+const types={};
+R.forEach(r=>{const t=r.type||'—';if(!types[t])types[t]={count:0,companies:{}};types[t].count++;
+  const c=r.customer||'—';(types[t].companies[c]=types[t].companies[c]||[]).push(r);});
+const typeNames=Object.keys(types).sort((a,b)=>types[b].count-types[a].count);
+const totalCompanies=new Set(R.map(r=>r.customer)).size;
+const totalScenarios=new Set(R.map(r=>norm(r.scenario))).size;
+
+/* dashboard */
+const kpis=[[R.length,'запросов в работе'],[totalCompanies,'заказчиков'],[typeNames.length,'типов роботов'],
+ [totalScenarios,'сценариев применения'],[TESTS.length,'тестирований / пилотов'],[CONTACTS.length,'контактов исполнителей']];
+document.getElementById('dash').innerHTML=kpis.map(k=>
+ '<div class="tile kpi hov"><div class="big num" data-target="'+k[0]+'">0</div><div class="cap">'+k[1]+'</div></div>').join('');
+
+document.getElementById('ntests').textContent=TESTS.length;
+document.getElementById('ncont').textContent=CONTACTS.length;
+
+/* count-up */
+document.querySelectorAll('[data-target]').forEach(el=>{const tg=+el.dataset.target,d=1100,t0=performance.now(),e=t=>1-Math.pow(1-t,3);
+ (function s(n){const p=Math.min((n-t0)/d,1);el.textContent=Math.round(tg*e(p)).toLocaleString('ru-RU');if(p<1)requestAnimationFrame(s);})(performance.now());});
+
+/* status bar */
+const stCount={};R.forEach(r=>{const s=norm(r.status)||'—';stCount[s]=(stCount[s]||0)+1;});
+const stArr=STATUS_ORDER.filter(s=>stCount[s]).map(s=>[s,stCount[s]]).concat(Object.keys(stCount).filter(s=>!STATUS_ORDER.includes(s)).map(s=>[s,stCount[s]]));
+const track=stArr.map(([s,n])=>'<div style="width:'+(n/R.length*100)+'%;background:'+statusColor(s)+'" title="'+s+': '+n+'"></div>').join('');
+const leg=stArr.map(([s,n])=>'<span><i class="dot" style="background:'+statusColor(s)+'"></i>'+s+' — <b style="color:#fff;font-weight:500">'+n+'</b></span>').join('');
+document.getElementById('statile').innerHTML='<div class="panel-h"><span class="panel-t">Статусы запросов</span><span class="meta">воронка · '+R.length+' всего</span></div><div class="sbtrack">'+track+'</div><div class="sbleg">'+leg+'</div>';
+
+/* ===== graph ===== */
+const NS='http://www.w3.org/2000/svg',svg=document.getElementById('gsvg');
+const NEUTRAL='#C9D2DB';
+let selType=null,selCompany=null,W=0,H=0;
+
+function buildModel(){
+  const m={nodes:[],edges:[],flow:new Set()};
+  const hub={id:'hub',label:R.length+'',role:'запросов',kind:'hub',fx:.5,fy:.5,r:30,fill:'var(--g)'};
+  m.nodes.push(hub);
+  const n=typeNames.length;
+  const mxC=Math.max(...typeNames.map(t=>types[t].count));
+  typeNames.forEach((t,i)=>{
+    const ang=(-Math.PI/2)+(i*2*Math.PI/n);
+    const sel=selType===t;
+    const r=15+12*Math.sqrt(types[t].count/mxC);
+    m.nodes.push({id:'t:'+t,label:t,role:types[t].count+' запр.',kind:'type',type:t,
+      fx:.5+0.30*Math.cos(ang),fy:.5+0.30*Math.sin(ang),r:r,
+      fill:sel?'var(--g-bright)':NEUTRAL,dim:selType&&!sel});
+    m.edges.push({a:'hub',b:'t:'+t,d:i%2?1:-1,flow:sel,dim:selType&&!sel});
+  });
+  if(selType){
+    const comps=Object.keys(types[selType].companies).sort((a,b)=>types[selType].companies[b].length-types[selType].companies[a].length);
+    const cn=comps.length;
+    comps.forEach((c,i)=>{
+      const ang=(-Math.PI/2)+(i*2*Math.PI/cn);
+      const sel=selCompany===c;
+      m.nodes.push({id:'c:'+c,label:c,role:types[selType].companies[c].length+' запр.',kind:'company',company:c,
+        fx:.5+0.46*Math.cos(ang),fy:.5+0.46*Math.sin(ang),r:sel?12:9,
+        fill:sel?'var(--g-bright)':NEUTRAL,dim:selCompany&&!sel});
+      m.edges.push({a:'t:'+selType,b:'c:'+c,d:i%2?1:-1,flow:sel,dim:selCompany&&!sel});
+    });
+  }
+  return m;
+}
+
+function curve(A,B,d){const mx=(A.x+B.x)/2,my=(A.y+B.y)/2,dx=B.x-A.x,dy=B.y-A.y,l=Math.hypot(dx,dy)||1,o=l*.14*d;
+  return'M'+A.x+','+A.y+' Q'+(mx+(-dy/l)*o)+','+(my+(dx/l)*o)+' '+B.x+','+B.y;}
+
+let model=null,nodeEls=[],edgeEls=[];
+function render(){
+  svg.innerHTML='';
+  const defs=document.createElementNS(NS,'defs');
+  defs.innerHTML='<linearGradient id="mg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22B24A"/><stop offset="1" stop-color="#2BD957"/></linearGradient>';
+  svg.appendChild(defs);
+  model=buildModel();
+  edgeEls=model.edges.map(e=>{const p=document.createElementNS(NS,'path');p.setAttribute('class',e.flow?'gflow':'gedge');if(e.dim)p.classList.add('gdim');svg.appendChild(p);return p;});
+  nodeEls=model.nodes.map(nd=>{
+    const g=document.createElementNS(NS,'g');g.setAttribute('class','gnode'+(nd.dim?' gdim':''));
+    const ring=document.createElementNS(NS,'circle');ring.setAttribute('class','ring');ring.setAttribute('r',nd.r+6);
+    const dot=document.createElementNS(NS,'circle');dot.setAttribute('class','dot');dot.setAttribute('r',nd.r);dot.setAttribute('fill',nd.fill);
+    if(nd.kind==='hub'||nd.fill==='var(--g-bright)')dot.style.filter='drop-shadow(0 0 9px rgba(43,217,87,.7))';
+    g.append(ring,dot);
+    if(nd.kind==='hub'){
+      const tt=document.createElementNS(NS,'text');tt.setAttribute('text-anchor','middle');tt.setAttribute('y',2);tt.style.fontSize='18px';tt.style.fontWeight='600';tt.style.fill='#06110D';tt.textContent=nd.label;
+      const tr=document.createElementNS(NS,'text');tr.setAttribute('text-anchor','middle');tr.setAttribute('y',16);tr.style.fontSize='9px';tr.style.fill='rgba(6,17,13,.7)';tr.textContent=nd.role;
+      g.append(tt,tr);
+    }else{
+      const t1=document.createElementNS(NS,'text');t1.setAttribute('text-anchor','middle');
+      const words=nd.label.split(' ');let lines=[],cur='';words.forEach(w=>{if((cur+' '+w).trim().length>17){lines.push(cur.trim());cur=w;}else cur+=' '+w;});if(cur.trim())lines.push(cur.trim());
+      if(nd.kind==='company'&&lines.length>1)lines=[nd.label.length>20?nd.label.slice(0,19)+'…':nd.label];
+      lines.forEach((ln,k)=>{const ts=document.createElementNS(NS,'tspan');ts.setAttribute('x',0);ts.setAttribute('dy',k===0?0:12);ts.textContent=ln;t1.appendChild(ts);});
+      nd._lines=lines.length;
+      const t2=document.createElementNS(NS,'text');t2.setAttribute('class','role');t2.setAttribute('text-anchor','middle');t2.textContent=nd.role;
+      g.append(t1,t2);nd._t1=t1;nd._t2=t2;
+    }
+    svg.appendChild(g);
+    g.addEventListener('pointerenter',()=>{ring.style.opacity=nd.kind==='hub'?0:1;});
+    g.addEventListener('pointerleave',()=>{ring.style.opacity=0;});
+    g.addEventListener('click',ev=>{ev.stopPropagation();onClick(nd);});
+    return {g,nd};
+  });
+  layout();
+  document.getElementById('hint').textContent=!selType?'Нажмите на тип робота':!selCompany?'Нажмите на заказчика':'';
+  updateCrumb();
+}
+function layout(){
+  const r=svg.getBoundingClientRect();W=r.width;H=r.height;svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  model.nodes.forEach(n=>{n.x=n.fx*W;n.y=n.fy*H;});
+  model.edges.forEach((e,i)=>{const A=model.nodes.find(n=>n.id===e.a),B=model.nodes.find(n=>n.id===e.b);edgeEls[i].setAttribute('d',curve(A,B,e.d));});
+  nodeEls.forEach(({g,nd})=>{g.setAttribute('transform','translate('+nd.x+','+nd.y+')');
+    if(nd._t1){nd._t1.setAttribute('y',nd.r+15);nd._t2.setAttribute('y',nd.r+15+nd._lines*12+2);}});
+}
+function onClick(nd){
+  if(nd.kind==='hub'){selType=null;selCompany=null;}
+  else if(nd.kind==='type'){selType=(selType===nd.type?null:nd.type);selCompany=null;}
+  else if(nd.kind==='company'){selCompany=(selCompany===nd.company?null:nd.company);}
+  render();updatePanel();
+}
+svg.addEventListener('click',()=>{});
+new ResizeObserver(()=>{if(model)layout();}).observe(svg.parentElement);
+
+function updateCrumb(){
+  let cb='<b onclick="reset()">Все типы</b>';
+  if(selType)cb+='<span class="sep">/</span><b onclick="pickType(\''+js(selType)+'\')">'+esc(selType)+'</b>';
+  if(selCompany)cb+='<span class="sep">/</span><span style="color:#fff">'+esc(selCompany)+'</span>';
+  document.getElementById('crumb').innerHTML=cb;
+}
+function reset(){selType=null;selCompany=null;render();updatePanel();}
+function pickType(t){selType=t;selCompany=null;render();updatePanel();}
+function pickCompany(c){selCompany=c;render();updatePanel();}
+window.reset=reset;window.pickType=pickType;window.pickCompany=pickCompany;
 
 function updatePanel(){
   const p=document.getElementById('panel');
   if(!selType){
-    const rows=typeNames.map(t=>'<div class="crow" onclick="pickType(\''+js(t)+'\')">'+
-      '<span class="nm"><i class="dot" style="background:'+typeColorMap[t]+'"></i> '+esc(t)+'</span>'+
-      '<span class="cnt">'+types[t].count+' запр.</span></div>').join('');
-    p.innerHTML='<h3>'+typeNames.length+' типов роботизированных систем</h3>'+
-      '<div class="sub">Всего '+R.length+' запросов от '+totalCompanies+' заказчиков. Выберите тип:</div>'+
-      '<div class="complist">'+rows+'</div>';
-    return;
+    const rows=typeNames.map(t=>'<div class="row" onclick="pickType(\''+js(t)+'\')"><span class="nm"><i class="dot" style="background:var(--g)"></i>'+esc(t)+'</span><span class="cnt">'+types[t].count+'</span></div>').join('');
+    p.innerHTML='<h3>'+typeNames.length+' типов роботизированных систем</h3><div class="sub">'+R.length+' запросов от '+totalCompanies+' заказчиков. Выберите тип.</div><div class="rowlist">'+rows+'</div>';return;
   }
   const comps=Object.keys(types[selType].companies).sort((a,b)=>types[selType].companies[b].length-types[selType].companies[a].length);
   if(!selCompany){
-    const rows=comps.map(c=>'<div class="crow" onclick="pickCompany(\''+js(c)+'\')">'+
-      '<span class="nm">'+esc(c)+'</span>'+
-      '<span class="cnt">'+types[selType].companies[c].length+' запр.</span></div>').join('');
-    p.innerHTML='<button class="backbtn" onclick="resetMap()">← Все типы</button>'+
-      '<h3 style="color:'+typeColorMap[selType]+'">'+esc(selType)+'</h3>'+
-      '<div class="sub">'+types[selType].count+' запросов · '+comps.length+' заказчиков</div>'+
-      '<div class="complist">'+rows+'</div>';
-    return;
+    const rows=comps.map(c=>'<div class="row" onclick="pickCompany(\''+js(c)+'\')"><span class="nm">'+esc(c)+'</span><span class="cnt">'+types[selType].companies[c].length+'</span></div>').join('');
+    p.innerHTML='<button class="backbtn" onclick="reset()">← Все типы</button><h3>'+esc(selType)+'</h3><div class="sub">'+types[selType].count+' запросов · '+comps.length+' заказчиков</div><div class="rowlist">'+rows+'</div>';return;
   }
   const reqs=types[selType].companies[selCompany];
-  const items=reqs.map(r=>'<div class="req" style="border-left-color:'+statusColor(norm(r.status))+'">'+
-    '<div class="rq">'+esc(r.request)+'</div>'+
-    '<div class="meta">'+
-      '<span class="badge scen">'+esc(norm(r.scenario)||'—')+'</span>'+
-      '<span class="badge" style="background:'+statusColor(norm(r.status))+'22;color:'+statusColor(norm(r.status))+'">'+esc(norm(r.status)||'—')+'</span>'+
-      '<span class="num-pill">№'+esc(r.num)+'</span>'+
-    '</div></div>').join('');
-  p.innerHTML='<button class="backbtn" onclick="pickType(\''+js(selType)+'\')">← '+esc(selType)+'</button>'+
-    '<h3>'+esc(selCompany)+'</h3>'+
-    '<div class="sub">'+reqs.length+' запрос(ов) · тип: '+esc(selType)+'</div>'+
-    '<div class="reqlist">'+items+'</div>';
+  const items=reqs.map(r=>{const sc=statusColor(norm(r.status));return '<div class="req" style="border-left-color:'+sc+'"><div class="rq">'+esc(r.request)+'</div><div class="mrow"><span class="badge scen">'+esc(norm(r.scenario)||'—')+'</span><span class="badge" style="background:'+sc+'22;color:'+sc+'">'+esc(norm(r.status)||'—')+'</span><span class="numpill">№'+esc(r.num)+'</span></div></div>';}).join('');
+  p.innerHTML='<button class="backbtn" onclick="pickType(\''+js(selType)+'\')">← '+esc(selType)+'</button><h3>'+esc(selCompany)+'</h3><div class="sub">'+reqs.length+' запрос(ов) · '+esc(selType)+'</div><div class="reqlist">'+items+'</div>';
 }
-function pickType(t){selType=t;selCompany=null;render();updatePanel();}
-function pickCompany(c){selCompany=c;render();updatePanel();}
-window.pickType=pickType; window.pickCompany=pickCompany;
+render();updatePanel();
 
-render(); updatePanel();
+/* tabs */
+document.querySelectorAll('.pill').forEach(pl=>{pl.onclick=()=>{
+  document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  pl.classList.add('active');document.getElementById('v-'+pl.dataset.v).classList.add('active');
+  if(pl.dataset.v==='map'&&model)setTimeout(layout,30);
+};});
 
-document.querySelectorAll('.tab').forEach(tab=>{
-  tab.onclick=()=>{
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('v-'+tab.dataset.v).classList.add('active');
-  };
-});
+/* tests */
+function renderTests(q){q=(q||'').toLowerCase();const list=TESTS.filter(t=>!q||JSON.stringify(t).toLowerCase().includes(q));
+  document.getElementById('testcards').innerHTML=list.map(t=>{
+    const sc=/успешн|реализов|завершен/i.test(t.status)?'#2BD957':/проработк|методолог/i.test(t.status)?'#8893A0':'#5DA985';
+    return '<div class="tcard"><div class="th"><span class="cust">'+esc(t.customer)+'</span><span class="badge" style="background:'+sc+'22;color:'+sc+'">'+esc(t.status)+'</span></div><div class="rq">'+esc(t.request)+'</div><div class="desc">'+esc(t.testing)+'</div><div class="tf"><span class="exec">'+esc(t.executor)+'</span>'+(t.manager?'<span class="badge scen">'+esc(t.manager)+'</span>':'')+'</div></div>';
+  }).join('')||'<div style="color:var(--faint);padding:30px">Ничего не найдено</div>';}
+renderTests();document.getElementById('tsearch').oninput=e=>renderTests(e.target.value);
 
-function renderTests(q){
-  q=(q||'').toLowerCase();
-  const list=TESTS.filter(t=>!q||JSON.stringify(t).toLowerCase().includes(q));
-  document.getElementById('testcards').innerHTML = list.map(t=>{
-    const sc=/успешн|реализов|завершен/i.test(t.status)?'#4be38c':/проработк|методолог/i.test(t.status)?'#ffb454':'#4d8bff';
-    return '<div class="tcard" style="border-top-color:'+sc+'">'+
-      '<div class="h"><span class="cust">'+esc(t.customer)+'</span>'+
-        '<span class="badge" style="background:'+sc+'22;color:'+sc+'">'+esc(t.status)+'</span></div>'+
-      '<div class="rq">'+esc(t.request)+'</div>'+
-      '<div class="desc">'+esc(t.testing)+'</div>'+
-      '<div class="ft"><span class="exec">\u{1F3ED} '+esc(t.executor)+'</span>'+
-        (t.manager?'<span class="badge scen">\u{1F464} '+esc(t.manager)+'</span>':'')+'</div>'+
-    '</div>';}).join('') || '<div style="color:#8a98b8;padding:30px">Ничего не найдено</div>';
-}
-renderTests();
-document.getElementById('tsearch').oninput=e=>renderTests(e.target.value);
-
-function renderContacts(q){
-  q=(q||'').toLowerCase();
-  const list=CONTACTS.filter(c=>!q||JSON.stringify(c).toLowerCase().includes(q));
-  document.getElementById('ctable').innerHTML =
-    '<thead><tr><th>Компания</th><th>Контактное лицо</th><th>Контакт</th><th>Статус</th></tr></thead><tbody>'+
-    list.map(c=>'<tr><td><b>'+esc(c.company)+'</b></td><td>'+esc(c.person)+'</td>'+
-      '<td>'+esc(c.contact)+'</td><td>'+(esc(c.note)||'—')+'</td></tr>').join('')+'</tbody>';
-}
-renderContacts();
-document.getElementById('csearch').oninput=e=>renderContacts(e.target.value);
+/* contacts */
+function renderContacts(q){q=(q||'').toLowerCase();const list=CONTACTS.filter(c=>!q||JSON.stringify(c).toLowerCase().includes(q));
+  document.getElementById('ctable').innerHTML='<thead><tr><th>Компания</th><th>Контактное лицо</th><th>Контакт</th><th>Статус</th></tr></thead><tbody>'+
+    list.map(c=>'<tr><td><b>'+esc(c.company)+'</b></td><td>'+esc(c.person)+'</td><td>'+esc(c.contact)+'</td><td>'+(esc(c.note)||'—')+'</td></tr>').join('')+'</tbody>';}
+renderContacts();document.getElementById('csearch').oninput=e=>renderContacts(e.target.value);
 </script>
 </body>
 </html>

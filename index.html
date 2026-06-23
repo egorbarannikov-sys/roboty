@@ -112,7 +112,7 @@ body{font-family:var(--font);color:var(--fg);min-height:100dvh;overflow-x:hidden
 .ctable tr:last-child td{border-bottom:none}.ctable tbody tr:hover td{background:rgba(43,217,87,.05)}.ctable td b{font-weight:600}
 @media(max-width:1100px){.kpi{grid-column:span 4}.maprow{grid-template-columns:1fr}.graphtile{min-height:460px}.detile{min-height:auto}}
 @media(max-width:640px){.wrap{padding:20px 14px 70px}.htext h1{font-size:22px}.brandtag{display:none}.kpi{grid-column:span 6}.big{font-size:32px}.cards{grid-template-columns:1fr}
-  .graphtile{min-height:74vh;padding:16px 8px}.detile{min-height:auto}.graph-body{margin-top:2px}.crumb{font-size:12px}}
+  .graphtile{min-height:58vh;padding:14px 4px}.detile{min-height:auto}.graph-body{margin-top:2px}.crumb{font-size:12px;padding:0 8px}.sbleg span{font-size:11.5px}}
 @media(prefers-reduced-motion:reduce){.tile{opacity:1;transform:none;animation:none}.gflow{animation:none}}
 </style>
 </head>
@@ -159,6 +159,8 @@ function js(s){return (s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
 const STATUS_ORDER=['Поиск решений','Разработка ТЗ к решению','Отправлена подборка','Согласование требований к продукту','Разработка методологии тестирования','Готовится пилот','Осуществлена закупка','Заключен договор'];
 const STATUS_COLORS={'Поиск решений':'#545C66','Разработка ТЗ к решению':'#6B7480','Отправлена подборка':'#8893A0','Согласование требований к продукту':'#5DA985','Разработка методологии тестирования':'#46B86E','Готовится пилот':'#2BD957','Осуществлена закупка':'#23A847','Заключен договор':'#1C8F3C'};
 const statusColor=s=>STATUS_COLORS[s]||'#8E97A1';
+const SHORT={'БАС для мониторинга и инфраструктуры':'БАС мониторинга','Автономные сервисные платформы':'Автономные платформы','Линейные инспекционные роботы':'Линейные роботы','Сенсорные платформы мониторинга':'Сенсорные платформы','Надводные и подводные роботы':'Надводные/подводные','Гидродинамические роботы':'Гидродинам. роботы','Роботы телеинспекции':'Телеинспекция','Манипуляционные системы':'Манипуляц. системы','Складская и производственная логистика':'Складская логистика','Спецтехника, бурение, ж/д и добыча':'Спецтехника, добыча','Обработка и очистка поверхностей':'Обработка поверхностей','Промышленная покраска и покрытия':'Покраска и покрытия','Отделочные и строительные работы':'Отделочные работы','Подводная и внутритрубная инспекция':'Подводная инспекция','Уборка и обслуживание инфраструктуры':'Уборка/обслуживание','Безопасность и пожаротушение':'Безопасность','Прочие производственные операции':'Прочие операции','Сварка, клёпка, сборка':'Сварка/сборка','Доставка и отбор проб':'Доставка проб','Внутренняя доставка':'Внутр. доставка','Инвентаризация и учёт':'Инвентаризация'};
+const disp=s=>SHORT[s]||s;
 
 /* aggregates */
 const typeNames=[...new Set(R.map(r=>r.type))].sort((a,b)=>R.filter(x=>x.type===b).length-R.filter(x=>x.type===a).length);
@@ -207,7 +209,7 @@ function render(){
   svg.appendChild(defs);
   const ch=children();const n=ch.length;const mx=Math.max(1,...ch.map(c=>c.count));
   const mob=(window.innerWidth||999)<600;
-  const fracX=mob?0.32:0.40, fracY=mob?0.40:0.42;
+  const fracX=mob?0.29:0.40, fracY=mob?0.36:0.42;
   model={center:{fx:.5,fy:.5},kids:[],mob:mob};
   ch.forEach((c,i)=>{const ang=(-Math.PI/2)+(i*2*Math.PI/n);
     c.fx=.5+fracX*Math.cos(ang);c.fy=.5+fracY*Math.sin(ang);
@@ -224,8 +226,8 @@ function render(){
     if(c.sel)dot.style.filter='drop-shadow(0 0 9px rgba(43,217,87,.7))';
     g.append(ring,dot);
     const t1=document.createElementNS(NS,'text');t1.setAttribute('text-anchor','middle');
-    if(mob)t1.style.fontSize='11px';
-    let lines=(c.kind==='company')?[short(c.label,mob?16:20)]:wrap(c.label,mob?13:16);
+    if(mob)t1.style.fontSize='10.5px';
+    let lines=(c.kind==='company')?[short(c.label,mob?15:20)]:wrap(disp(c.label),mob?14:17);
     lines.forEach((ln,k)=>{const ts=document.createElementNS(NS,'tspan');ts.setAttribute('x',0);ts.setAttribute('dy',k===0?0:(mob?11:12));ts.textContent=ln;t1.appendChild(ts);});
     const t2=document.createElementNS(NS,'text');t2.setAttribute('class','role');t2.setAttribute('text-anchor','middle');t2.textContent=c.count+' запр.';
     g.append(t1,t2);c._t1=t1;c._t2=t2;c._lines=lines.length;

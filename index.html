@@ -111,7 +111,8 @@ body{font-family:var(--font);color:var(--fg);min-height:100dvh;overflow-x:hidden
 .ctable td{padding:15px 18px;border-bottom:1px solid var(--border-soft);font-size:14px;font-weight:400}
 .ctable tr:last-child td{border-bottom:none}.ctable tbody tr:hover td{background:rgba(43,217,87,.05)}.ctable td b{font-weight:600}
 @media(max-width:1100px){.kpi{grid-column:span 4}.maprow{grid-template-columns:1fr}.graphtile{min-height:460px}.detile{min-height:auto}}
-@media(max-width:640px){.wrap{padding:20px 14px 70px}.htext h1{font-size:22px}.brandtag{display:none}.kpi{grid-column:span 6}.big{font-size:32px}.cards{grid-template-columns:1fr}}
+@media(max-width:640px){.wrap{padding:20px 14px 70px}.htext h1{font-size:22px}.brandtag{display:none}.kpi{grid-column:span 6}.big{font-size:32px}.cards{grid-template-columns:1fr}
+  .graphtile{min-height:74vh;padding:16px 8px}.detile{min-height:auto}.graph-body{margin-top:2px}.crumb{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.tile{opacity:1;transform:none;animation:none}.gflow{animation:none}}
 </style>
 </head>
@@ -205,10 +206,12 @@ function render(){
   defs.innerHTML='<linearGradient id="mg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22B24A"/><stop offset="1" stop-color="#2BD957"/></linearGradient>';
   svg.appendChild(defs);
   const ch=children();const n=ch.length;const mx=Math.max(1,...ch.map(c=>c.count));
-  model={center:{fx:.5,fy:.5},kids:[]};
+  const mob=(window.innerWidth||999)<600;
+  const fracX=mob?0.32:0.40, fracY=mob?0.40:0.42;
+  model={center:{fx:.5,fy:.5},kids:[],mob:mob};
   ch.forEach((c,i)=>{const ang=(-Math.PI/2)+(i*2*Math.PI/n);
-    c.fx=.5+0.40*Math.cos(ang);c.fy=.5+0.40*Math.sin(ang);
-    c.r=(c.kind==='company')?(selComp===c.key?13:10):14+12*Math.sqrt(c.count/mx);
+    c.fx=.5+fracX*Math.cos(ang);c.fy=.5+fracY*Math.sin(ang);
+    c.r=(c.kind==='company')?(selComp===c.key?(mob?11:13):(mob?9:10)):(mob?11:14)+(mob?9:12)*Math.sqrt(c.count/mx);
     c.sel=(c.kind==='company'&&selComp===c.key);
     c.dim=(c.kind==='company'&&selComp&&!c.sel);
     model.kids.push(c);});
@@ -221,8 +224,9 @@ function render(){
     if(c.sel)dot.style.filter='drop-shadow(0 0 9px rgba(43,217,87,.7))';
     g.append(ring,dot);
     const t1=document.createElementNS(NS,'text');t1.setAttribute('text-anchor','middle');
-    let lines=(c.kind==='company')?[short(c.label,20)]:wrap(c.label,16);
-    lines.forEach((ln,k)=>{const ts=document.createElementNS(NS,'tspan');ts.setAttribute('x',0);ts.setAttribute('dy',k===0?0:12);ts.textContent=ln;t1.appendChild(ts);});
+    if(mob)t1.style.fontSize='11px';
+    let lines=(c.kind==='company')?[short(c.label,mob?16:20)]:wrap(c.label,mob?13:16);
+    lines.forEach((ln,k)=>{const ts=document.createElementNS(NS,'tspan');ts.setAttribute('x',0);ts.setAttribute('dy',k===0?0:(mob?11:12));ts.textContent=ln;t1.appendChild(ts);});
     const t2=document.createElementNS(NS,'text');t2.setAttribute('class','role');t2.setAttribute('text-anchor','middle');t2.textContent=c.count+' запр.';
     g.append(t1,t2);c._t1=t1;c._t2=t2;c._lines=lines.length;
     svg.appendChild(g);
@@ -233,10 +237,10 @@ function render(){
   });
   // center
   const cg=document.createElementNS(NS,'g');cg.setAttribute('class','gnode');
-  const cd=document.createElementNS(NS,'circle');cd.setAttribute('class','dot');cd.setAttribute('r',38);cd.setAttribute('fill','var(--g)');cd.style.filter='drop-shadow(0 0 10px rgba(43,217,87,.5))';cg.append(cd);
+  const cd=document.createElementNS(NS,'circle');cd.setAttribute('class','dot');cd.setAttribute('r',mob?31:38);cd.setAttribute('fill','var(--g)');cd.style.filter='drop-shadow(0 0 10px rgba(43,217,87,.5))';cg.append(cd);
   const cl=centerLabel();
-  const ct=document.createElementNS(NS,'text');ct.setAttribute('text-anchor','middle');ct.setAttribute('y',0);ct.style.fontSize='20px';ct.style.fontWeight='600';ct.style.fill='#06110D';ct.textContent=cl.big;cg.append(ct);
-  const cs=document.createElementNS(NS,'text');cs.setAttribute('text-anchor','middle');cs.setAttribute('y',15);cs.style.fontSize='9px';cs.style.fill='rgba(6,17,13,.75)';cs.textContent=cl.sub;cg.append(cs);
+  const ct=document.createElementNS(NS,'text');ct.setAttribute('text-anchor','middle');ct.setAttribute('y',mob?-1:0);ct.style.fontSize=mob?'17px':'20px';ct.style.fontWeight='600';ct.style.fill='#06110D';ct.textContent=cl.big;cg.append(ct);
+  const cs=document.createElementNS(NS,'text');cs.setAttribute('text-anchor','middle');cs.setAttribute('y',mob?12:15);cs.style.fontSize='9px';cs.style.fill='rgba(6,17,13,.75)';cs.textContent=cl.sub;cg.append(cs);
   cg.addEventListener('click',e=>{e.stopPropagation();zoomOut();});
   svg.appendChild(cg);model._center=cg;
   layout();
